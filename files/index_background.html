@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<!--  Use Alt L Alt O to launch webpage using Live Server Plug-in-->
+<html lan="en">
+
+<head>
+    <title >
+        'Joshua Web Dev Learnings'
+    </title>
+    <style>     /* Style for element move to click */
+/*  replaced with image slide style
+        .profile_pic
+        {
+            width: 200px; /* updateImageSize() sets relative to window 
+            height: 200px;
+        }
+*/
+        body {
+        padding: 0px;
+        margin: 0;
+        }
+
+        #contentContainer {
+            width: 90%;   /* containerFullWidth() sets relative to window */
+            height: 300px;
+            margin-left: auto;
+            margin-right: auto;
+            border: 5px #EDEDED solid;
+            overflow: hidden;
+            background-color: #F2F2F2;
+            cursor: pointer;
+        }
+
+        #thing { 
+            width: 30px;    /* containerFullWidth() sets relative to window */
+            height: 30px;
+            background-color: rgb(255, 207, 0);
+            border-radius: 50%;
+            border: 5px rgb(255, 199, 0) solid;
+            
+            transition: transform .3s cubic-bezier(.5, 0, 1, 1);
+            }
+    </style> <!--   Ideas: make contentContainer fit window
+                    translate3d not needed here, just syntax example
+                    transform: translate3d(50px, 50px, 0);
+                    transition: transform adds the movement animation for 3 sec duration -->
+    
+    <style>  /* style for image slide */
+        body {
+            background-color: #EEE;
+            text-align: center;
+        }
+
+        .pictureContainer {
+            margin-left: auto;
+            margin-right: auto;
+            width: 220px;
+            height: 220px;
+            overflow: hidden;
+        }
+
+        .pictureContainer img {
+            transition: transform .2s ease-in-out;
+        }
+
+        .pictureContainer img:hover {
+            transform: translate3d(0px, -220px, 0px);
+        }
+
+        /* background image */
+        .container {
+                position: absolute;
+                max-width: 1280px;
+                margin: 0 auto;
+                z-index: -1;
+            }
+
+            /* 
+                Orriginal image size width 3743px x height 3024px
+                H / W = 80.79% aspect ratio
+            */
+
+        .bg-image {
+                width: 100%;
+                padding-top: 80.79%;    /* this adjusts height responsivly.  Match aspect ratio */
+                background-image: url('sunset_1.jpg');
+                background-repeat: no-repeat;
+                background-image: center;
+                background-size: contain;
+        }
+
+    </style>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- makes responsive for mobile -->
+</head>
+
+<body id="body_HTML" style="text-align: center; background-color: gray;">                      <!-- attributes here for entire body -->
+
+    <!-- background image -->
+    <main class="container">
+        <div class="bg-image"></div>
+    </main>
+
+
+    <h1 style="color: blue; font: italic bold 24px Arial;">Joshua Olson Learnings</h1>          <!-- add style atribute color; add multiple attributes after ';'-->
+
+    <div class="pictureContainer">
+        <img class="image" alt="Joshua Profile" src="Joshua_both_220.png"> <!-- image width 589 height 1178 -->
+    </div>
+    <div>
+        Click profile image, then click elsewhere to reset. <br><br>
+    </div>
+
+<!--
+    <div>
+        <img id="profilePic" src="Joshua_1_c.png" class="profile_pic">
+    </div>
+-->
+    <p style="font: bold 20px/20px Arial;" id="p1">     <!-- after ':' attributes are separated by spaces -->
+        Examples of Joshua's JavaScript learnings:<br>
+        <a href="https://github.com/JoshuaOlson/Web_Dev/blob/master/index.html" target="_blank">Click to see the code.</a>
+    </p>
+    <div>Click to move object by JavaScript transform method:</div>
+    <div id="contentContainer">
+        <div id="thing"></div>
+    </div>
+    <div>
+        Choose background color: <br/>
+        <input type="radio" name="r_button2" value="gray" id="_gray" onclick="backgroundColor('gray')" checked/> Gray<br/>
+        <input type="radio" name="r_button2" value="red" id="_red" onclick="backgroundColor('red')"/>  Red <br/>
+        <input type="radio" name="r_button2" value="yellow" id="_yellow" onclick="backgroundColor('yellow')"/> Yellow<br/>
+    </div>
+    <div>
+        <br/>Input your name into form for custom response:
+        <form onsubmit="greet(); return false;">        <!-- onsubmit element excecuted when clicked,
+                                                            calls function "greet()"
+                                                            must return false so not submit to new webpage and load it -->
+            <input type="text" id="name">   <!-- must give id to access it elsewhere-->
+            <input type="submit">   <!-- creates clickable button-->
+        </form>
+    </div>
+    <div>   <!-- Create Radio Button -->
+        <input type="radio" name="r_button" id="_alert"/> Create Pop-Up<br/>
+        <input type="radio" name="r_button" id="_html" checked/> Update HTML<br/>
+    </div>
+    <div id="result" style="color:black;">   <!--must give id to access it-->
+        Hello! This HTML will be updated after clicking submit.
+    </div>
+    <p> <!-- Show mouse X and Y -->
+        Display mouse coordinates and window size?<br/>
+        <input type="radio" name="r_button3" id="display_yes" onclick="track_mouse(); display_size()"/> Yes<br/>
+        <input type="radio" name="r_button3" id="display_no" onclick="remove_track_mouse()"checked/>  No <br/>
+    </p>
+    <p id="mouse_tracking_p"></p>
+    <p id="display_size_p"></p>
+
+    <script>    
+
+        //Sets profile image size relative to window dimensions
+        function updateImageSize()
+        {
+            /*
+            var w = window.innerWidth;
+            var h = window.innerHeight;
+            var imageDiameter = .3 * h;
+            var profileImage = document.getElementById('profilePic');
+            
+            profileImage.style.width = imageDiameter + "px";
+            profileImage.style.height = imageDiameter + "px";
+
+            //update if window resized
+            //TODO: resize not working here
+            document.getElementsByTagName("BODY")[0].onresize = function() {updateImageSize()};
+            */
+        }
+        updateImageSize();  
+
+        function display_size()
+        {
+            if(document.getElementById("display_yes").checked)
+            {
+                var _display_size_p = document.getElementById('display_size_p');    //save <p> to JS var for ease
+                
+                //Display window h and w
+                var w = window.innerWidth;
+                var h = window.innerHeight;
+                var device_w = window.screen.availWidth;
+                var device_h = window.screen.availHeight;
+                _display_size_p.innerHTML = 
+                    '<span style="font-weight:bold">Browser: <br/></span> Width: '+ w + '<br/> Height: '+ h +
+                    '<span style="font-weight:bold"><br/>Device: <br/></span> Width: '+ device_w + '<br/> Height: '+ device_h;
+
+                console.log(window.innerHeight, document.documentElement.clientHeight, document.body.clientHeight);
+
+                //update if window resized
+                document.getElementsByTagName("BODY")[0].onresize = function() {display_size()};
+            }
+        }
+        
+        //Track mouse possition & display window size
+        function track_mouse()
+        {
+            if(document.getElementById("display_yes").checked)
+            {
+            //add HTML to <p id=mouse_tracking_p"> to display mouse coord.
+            document.getElementById('mouse_tracking_p').innerHTML = 'X: <span id="x-value"></span> <br/> Y: <span id="y-value"></span>';
+            document.getElementById('display_size_p').htm
+            window.addEventListener('mousemove', function(e)
+            {
+                document.getElementById('x-value').textContent=e.x; //update text content of html <span> with x and y.
+                document.getElementById('y-value').textContent=e.y;
+            })
+            }
+        }
+
+        //remove mouse possition
+        function remove_track_mouse()
+        {
+            //track_mouse_flag = false;
+            document.getElementById('mouse_tracking_p').innerHTML = "OFF";
+            document.getElementById('display_size_p').innerHTML = " ";
+        }
+
+        function greet()
+        {  
+            let name = document.querySelector('#name').value; // JS function that gets html element, '#' looks for ID
+            if (name=="")
+            {
+                name = "world";
+            }
+            //Get selection from radio button and do action
+            if(document.getElementById("_alert").checked)
+            {
+                alert("Hello, " + name + "!");
+            }
+            else
+            {
+                //document.querySelector('#result').innerHTML = '<br/>Hello, ' + name + '! JavaScript just updated this HTML website.';
+                document.getElementById('result').innerHTML = 'Hello, ' + name + '! JavaScript just updated this HTML website.';
+                document.getElementById("result").style.color = "blue";    //update color of paragraph p1   
+            }
+        }
+        function backgroundColor(_color)    //called by radio button
+        {
+            document.body.style.backgroundColor = _color
+        }
+    </script>   <!--this is where you add JavaScript Code alert("Hello, " + name + "!");-->
+    <script>    
+        //variables pointing to HTML elements
+        var theThing = document.querySelector("#thing");
+        var container = document.querySelector("#contentContainer");
+
+
+        //make html container and theThing circle size relative width of screen
+        function containerFullWidth(){
+            var w = window.innerWidth;
+            var h = window.innerHeight;
+            var containerBorder = container.style.border;   //TODO get this to work
+            containerBorder = 5;                           //delete
+            var containerWidthCalced = .9 * w - 2 * containerBorder;
+            container.style.width = containerWidthCalced + "px";
+            container.style.height = .4 * h + "px";
+
+            var thingDiameter = .06 * w;
+            theThing.style.width = thingDiameter + "px";
+            theThing.style.height = thingDiameter + "px";
+
+            //update if window resized
+            document.getElementsByTagName("BODY")[0].onresize = function() {containerFullWidth()};
+
+        }
+        containerFullWidth();       
+        //get mouse click possition
+        container.addEventListener("click", getClickPosition, false);
+
+        //define getClickPosition event handler
+        function getClickPosition(e) {
+
+            //use getPosition(element), pass it container and it will return 
+            //  offest X and Y to use below.
+            var parentPosition = getPosition(container);
+
+            var xPosition = e.clientX - parentPosition.x - (theThing.offsetWidth / 2);      //properties of event. shift the movement of 
+            var yPosition = e.clientY - parentPosition.y - (theThing.offsetHeight / 2);     //circle (thing) to center rather than top left
+
+            //build transform: translate3d(x,y,z) html command in javascript
+            var translate3dValue = "translate3d("+ xPosition + "px,"+ yPosition + "px, 0)";
+            //excecute transform action on object
+            theThing.style.transform = translate3dValue; 
+        }
+
+        // Helper function to get an element's exact position.
+        // Pass function paramater el and it determines this elements possition on page 
+        //      taking into effect scroll, offset, etc.
+        // Pass it container object and it will return 
+        //      offest X and Y to use in get mouse possition function.
+        // https://www.kirupa.com/html5/getting_mouse_click_position.htm#tutorialInformation
+        function getPosition(el) {
+            var xPosition = 0;
+            var yPosition = 0;
+ 
+            while (el) {
+                if (el.tagName == "BODY") {
+                    // deal with browser quirks with body/window/document and page scroll
+                    var xScrollPos = el.scrollLeft || document.documentElement.scrollLeft;
+                    var yScrollPos = el.scrollTop || document.documentElement.scrollTop;
+                
+                    xPosition += (el.offsetLeft - xScrollPos + el.clientLeft);
+                    yPosition += (el.offsetTop - yScrollPos + el.clientTop);
+                } else {
+                    xPosition += (el.offsetLeft - el.scrollLeft + el.clientLeft);
+                    yPosition += (el.offsetTop - el.scrollTop + el.clientTop);
+                }
+                el = el.offsetParent;
+            }
+              return {
+                x: xPosition,
+                y: yPosition
+            };
+        }
+
+    </script>
+
+
+</body>
+</html>
